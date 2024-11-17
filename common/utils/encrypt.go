@@ -6,7 +6,7 @@ import (
 )
 
 // MD5V 对目标字符串取Hash salt：加盐字段，iteration：hash迭代轮数。
-func MD5V(str string, salt string, iteration int) string {
+func MD5V(str string, salt string , iteration int) string {
 	b := []byte(str)
 	s := []byte(salt)
 	h := md5.New()

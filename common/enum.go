@@ -1,10 +1,10 @@
 package common
 
 import (
-	"LibSystem/global"
 	"errors"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 const (
@@ -30,6 +30,7 @@ func Send(ctx *gin.Context, code int) {
 const (
 	// jwt的字段名
 	CurrentID   = "current_id"
+	CurrentRole = "current_role"
 	CurrentName = "current_name"
 
 	// 用户角色
@@ -69,18 +70,4 @@ type Result struct {
 	Code int         `json:"code"`
 	Data interface{} `json:"data"`
 	Msg  string      `json:"msg"`
-}
-
-func GetJwtSecert(role string) string {
-	if role == RoleAdmin {
-		return global.Config.Jwt.Admin.Secret
-	}
-	return global.Config.Jwt.User.Secret
-}
-
-func GetJwtSub(role string) string {
-	if role == RoleAdmin {
-		return global.Config.Jwt.Admin.Name
-	}
-	return global.Config.Jwt.User.Name
 }

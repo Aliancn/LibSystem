@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
@@ -29,7 +30,7 @@ func InitLoadConfig() *AllConfig {
 	// 查找对应配置文件
 	err = config.Unmarshal(&configData)
 	if err != nil {
-		panic(fmt.Errorf("read config file to struct err: %s\n", err))
+		panic(fmt.Errorf("read config file to struct err: %s \n", err))
 	}
 	// 打印配置文件信息
 	fmt.Printf("配置文件信息：%+v", configData)
@@ -80,14 +81,9 @@ type Log struct {
 }
 
 type Jwt struct {
-	Admin JwtOption
-	User  JwtOption
-}
-
-type JwtOption struct {
-	Secret string
-	TTL    string
 	Name   string
+	Secret string
+	Expire int64
 }
 
 type AliOss struct {

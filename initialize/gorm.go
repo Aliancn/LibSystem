@@ -3,12 +3,13 @@ package initialize
 import (
 	"LibSystem/global"
 	"errors"
+	"time"
+
 	"golang.org/x/time/rate"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
-	"time"
 )
 
 var (

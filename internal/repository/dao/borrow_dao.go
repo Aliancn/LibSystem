@@ -4,6 +4,7 @@ import (
 	"LibSystem/internal/model"
 	"LibSystem/internal/repository"
 	"context"
+
 	"gorm.io/gorm"
 )
 
@@ -29,8 +30,9 @@ func (b BorrowDao) GetAll(ctx context.Context) ([]model.Borrow, error) {
 }
 
 func (b BorrowDao) GetByID(ctx context.Context, id int) (model.Borrow, error) {
-	//TODO implement me
-	panic("implement me")
+	var borrow model.Borrow
+	err := b.db.WithContext(ctx).First(&borrow, id).Error
+	return borrow, err
 }
 
 func (b BorrowDao) Update(ctx context.Context, borrow model.Borrow) error {
@@ -43,6 +45,17 @@ func (b BorrowDao) Delete(ctx context.Context, id int) error {
 	return err
 }
 
+func (b BorrowDao) GetByUserID(ctx context.Context, userID int) ([]model.Borrow, error) {
+	var borrows []model.Borrow
+	err := b.db.WithContext(ctx).Where("user_id = ?", userID).Find(&borrows).Error
+	if err != nil {
+		return nil, err
+	}
+	if len(borrows) == 0 {
+		return nil, nil
+	}
+	return borrows, nil
+}
 func NewBorrowDao(db *gorm.DB) repository.BorrowRepo {
 	return &BorrowDao{db: db}
 }

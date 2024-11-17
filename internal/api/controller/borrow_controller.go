@@ -4,9 +4,10 @@ import (
 	"LibSystem/common"
 	"LibSystem/global"
 	"LibSystem/internal/service"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 type BorrowController struct {
@@ -85,6 +86,25 @@ func (b *BorrowController) GetAll(ctx *gin.Context) {
 	if err != nil {
 		code = common.ERROR
 		global.Log.Warn("borrowController GetAll Error:", err.Error())
+		ctx.JSON(http.StatusOK, common.Result{
+			Code: code,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, common.Result{
+		Code: code,
+		Data: resp,
+	})
+}
+
+func (b *BorrowController) GetByUser(ctx *gin.Context) {
+	code := common.SUCCESS
+	id, _ := strconv.Atoi(ctx.Query("user_id"))
+	resp, err := b.service.GetByUserID(ctx, id)
+	if err != nil {
+		code = common.ERROR
+		global.Log.Warn("borrowController GetByUser Error:", err.Error())
 		ctx.JSON(http.StatusOK, common.Result{
 			Code: code,
 			Msg:  err.Error(),

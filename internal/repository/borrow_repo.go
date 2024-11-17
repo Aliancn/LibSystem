@@ -11,4 +11,5 @@ type BorrowRepo interface {
 	Update(ctx context.Context, borrow model.Borrow) error
 	Delete(ctx context.Context, id int) error
 	Create(ctx context.Context, borrow model.Borrow) error
+	GetByUserID(ctx context.Context, userID int) ([]model.Borrow, error)
 }

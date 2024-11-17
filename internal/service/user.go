@@ -3,11 +3,14 @@ package service
 import (
 	"LibSystem/common"
 	"LibSystem/common/utils"
+	"LibSystem/global"
 	"LibSystem/internal/api/request"
 	"LibSystem/internal/api/response"
 	"LibSystem/internal/model"
 	"LibSystem/internal/repository"
 	"errors"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -100,9 +103,11 @@ func (u UserService) Login(ctx *gin.Context, login request.UserLogin) (response.
 	if user.Password != hashPassword {
 		return response.UserLoginInfo{}, common.Error_PASSWORD_ERROR
 	}
-	jwtSecert := common.GetJwtSecert(user.Role)
-	jwtSub := common.GetJwtSub(user.Role)
-	token, err := utils.GenerateToken(uint64(user.ID), jwtSub, jwtSecert)
+
+	token, err := utils.GetJwtToken(global.Config.Jwt.Secret, time.Now().Unix(), global.Config.Jwt.Expire, int64(user.ID), user.Role)
+	if err != nil {
+		return response.UserLoginInfo{}, err
+	}
 	return response.UserLoginInfo{
 		UserId:   int64(user.ID),
 		Username: user.Username,
@@ -117,7 +122,7 @@ func (u UserService) Logout(ctx *gin.Context) error {
 
 func (u UserService) RegisterRole(ctx *gin.Context, register request.UserRegister) error {
 	_, err := u.repo.GetByUserName(ctx, register.Username)
-	if !errors.Is(gorm.ErrRecordNotFound, err) {
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return common.Error_ALREADY_EXISTS
 	}
 	hashPassword := utils.MD5V(register.Password, "", 0)
@@ -132,7 +137,7 @@ func (u UserService) RegisterRole(ctx *gin.Context, register request.UserRegiste
 
 func (u UserService) RegisterAdmin(ctx *gin.Context, register request.UserRegister) error {
 	_, err := u.repo.GetByUserName(ctx, register.Username)
-	if !errors.Is(gorm.ErrRecordNotFound, err) {
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return common.Error_ALREADY_EXISTS
 	}
 	hashPassword := utils.MD5V(register.Password, "", 0)

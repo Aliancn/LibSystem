@@ -1,4 +1,8 @@
 version: '3.3'
+# 网络配置
+networks:
+  backend:
+    driver: ${NETWORKS_DRIVER}
 services:
   redis:
     image: redis
@@ -11,21 +15,39 @@ services:
     command:
       - redis-server
     ports:
-      - '6379:6379'
+      - '${REDIS_PORT}:6379'
+    privileged: true
+    networks:
+      - backend
   postgres:
     image: postgres
     container_name: go-postgres
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: db_library
+      POSTGRES_USER: ${PGSQL_USERNAME}
+      POSTGRES_PASSWORD: ${PGSQL_PASSWORD}
+      POSTGRES_DB: ${PGSQL_DB}
     ports:
-      - '5432:5432'
+      - '${PGSQL_PORT}:5432'
     volumes:
       - ./data/postgres/data:/var/lib/postgresql/data
       - ./data/postgres/config:/config/postgresql.conf:/etc/postgresql/postgresql.conf
       - ./data/postgres/logs:/logs
+    privileged: true
+    networks:
+      - backend
+  etcd:                                  # 自定义容器名称
+    build:
+      context: ./docker/etcd                    # 指定构建使用的 Dockerfile 文件
+    environment:
+      - TZ=${TZ}
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+    ports:                               # 设置端口映射
+      - "${ETCD_PORT}:2379"
+    networks:
+      - backend
+    restart: always
   web:
     container_name: gin-server
     build:

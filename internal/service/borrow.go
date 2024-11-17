@@ -5,8 +5,9 @@ import (
 	"LibSystem/internal/api/response"
 	"LibSystem/internal/model"
 	"LibSystem/internal/repository"
-	"github.com/gin-gonic/gin"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 type IBorrowService interface {
@@ -14,6 +15,7 @@ type IBorrowService interface {
 	ReturnPaper(ctx *gin.Context, id uint) error
 	DeletePaper(ctx *gin.Context, id uint) error
 	GetAll(ctx *gin.Context) ([]response.BorrowVO, error)
+	GetByUserID(ctx *gin.Context, userID int) ([]response.BorrowVO, error)
 }
 
 type BorrowService struct {
@@ -59,6 +61,25 @@ func (b BorrowService) DeletePaper(ctx *gin.Context, id uint) error {
 
 func (b BorrowService) GetAll(ctx *gin.Context) ([]response.BorrowVO, error) {
 	borrows, err := b.borrowRepo.GetAll(ctx)
+	if err != nil {
+		return nil, err
+	}
+	var res []response.BorrowVO
+	for _, borrow := range borrows {
+		res = append(res, response.BorrowVO{
+			ID:         borrow.ID,
+			BorrowDate: borrow.BorrowDate,
+			ReturnDate: borrow.ReturnDate,
+			Status:     borrow.Status,
+			Book:       borrow.BookID,
+			User:       borrow.UserID,
+		})
+	}
+	return res, nil
+}
+
+func (b BorrowService) GetByUserID(ctx *gin.Context, userID int) ([]response.BorrowVO, error) {
+	borrows, err := b.borrowRepo.GetByUserID(ctx, userID)
 	if err != nil {
 		return nil, err
 	}

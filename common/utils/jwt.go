@@ -2,14 +2,16 @@ package utils
 
 import (
 	"errors"
-	"github.com/golang-jwt/jwt/v5"
+	"fmt"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 // CustomPayload 自定义载荷继承原有接口并附带自己的字段
 type CustomPayload struct {
 	UserId     uint64
-	GrantScope string
+	GrantScope string // role
 	jwt.RegisteredClaims
 }
 
@@ -43,4 +45,29 @@ func ParseToken(token string, secret string) (*CustomPayload, error) {
 		return claims, nil
 	}
 	return nil, errors.New("invalid token")
+}
+
+func GetJwtToken(secretKey string, iat, seconds int64, uid int64, role string) (string, error) {
+	claims := make(jwt.MapClaims)
+	claims["exp"] = iat + seconds
+	claims["iat"] = iat
+	claims["uid"] = uid
+	claims["role"] = role
+	token := jwt.New(jwt.SigningMethodHS256)
+	token.Claims = claims
+	return token.SignedString([]byte(secretKey))
+}
+
+func ParseJwtToken(secertKey string, token string) (jwt.MapClaims, error) {
+	parseToken, err := jwt.Parse(token, func(token *jwt.Token) (i interface{}, err error) {
+		return []byte(secertKey), nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	if claims, ok := parseToken.Claims.(jwt.MapClaims); ok && parseToken.Valid {
+		return claims, nil
+	}
+
+	return nil, fmt.Errorf("invalid token")
 }

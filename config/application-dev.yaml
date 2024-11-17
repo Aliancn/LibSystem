@@ -22,23 +22,10 @@ log:
   level: debug
   filepath: ./logger/systemLog.txt
 
-
 jwt:
-  admin:
-    # 设置jwt签名加密时使用的秘钥
-    secret: admin
-    # 设置jwt过期时间
-    ttl: 7200000
-    # 设置前端传递过来的令牌名称
-    name: token
-  user:
-    # 设置jwt签名加密时使用的秘钥
-    secret: user
-    # 设置jwt过期时间
-    ttl: 7200000
-    # 设置前端传递过来的令牌名称
-    name: Authorization
-
+  name: Authorization # 请求头中携带jwt的key
+  secret: uOvKLmVfztaXGpNYd4Z0I1SiT7MweJhl # jwt加密密钥
+  expire: 86400 # jwt过期时间
 
 alioss:
   endpoint: YouOption

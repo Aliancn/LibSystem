@@ -4,6 +4,7 @@ import (
 	"LibSystem/config"
 	"LibSystem/global"
 	"LibSystem/logger"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,6 +17,8 @@ func GlobalInit() *gin.Engine {
 	global.DB = InitDatabase(global.Config.DataSource.Dsn())
 	// Redis初始化
 	global.Redis = initRedis()
+	// 数据库表初始化
+	// InitTable()
 	// Router初始化
 	router := routerInit()
 	return router
