@@ -1,0 +1,145 @@
+syntax = "v1"
+
+// 引入 base.api 文件
+import "base.api"
+
+type (
+	// login
+	LoginRequest {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+	LoginResponseData {
+		Token    string `json:"token"`
+		UserID   string `json:"userId"`
+		Username string `json:"username"`
+		Role     string `json:"role"`
+	}
+	LoginResponse {
+		Base
+		data LoginResponseData `json:"data"`
+	}
+	// register
+	RegisterRequest {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+	RegisterResponse {
+		Base
+	}
+	// logout
+	LogoutRequest  {}
+	LogoutResponse {
+		Base
+	}
+	// get all user
+	GetAllUserRequest  {}
+	UserVO {
+		UserId   int64  `json:"userId"` //用户id
+		Username string `json:"username"` //用户名
+		Password string `json:"password"` //密码
+		Role     string `json:"role"` //角色
+		Name     string `json:"name" ` //姓名
+		Phone    string `json:"phone"` //手机号
+		Email    string `json:"email"` //邮箱
+	}
+	UserList {
+		List []UserVO `json:"list"`
+	}
+	GetAllUserResponse {
+		Base
+		data UserList `json:"data"`
+	}
+	// get user by name
+	GetUserByNameRequest {
+		Username string `form:"username"`
+	}
+	GetUserByNameResponse {
+		Base
+		data UserVO `json:"data"`
+	}
+	// get user by id
+	GetUserByIdRequest {
+		Id int64 `path:"id"`
+	}
+	GetUserByIdResponse {
+		Base
+		data UserVO `json:"data"`
+	}
+	// add user
+	AddUserRequest {
+		Username string `json:"username"`
+		Password string `json:"password"`
+		Role     string `json:"role"`
+		Name     string `json:"name"`
+		Phone    string `json:"phone"`
+		Email    string `json:"email"`
+	}
+	AddUserResponse {
+		Base
+	}
+	// update user info
+	UpdateUserInfoRequest {
+		UserId int64  `json:"userId"`
+		Name   string `json:"name"`
+		Phone  string `json:"phone"`
+		Email  string `json:"email"`
+	}
+	UpdateUserInfoResponse {
+		Base
+	}
+	// delete user
+	DeleteUserRequest {
+		UserId int64 `path:"userId"`
+	}
+	DeleteUserResponse {
+		Base
+	}
+	// edit password
+	EditPasswordRequest {
+		UserId      int64  `path:"userId"`
+		NewPassword string `json:"newPassword"`
+		OldPassword string `json:"oldPassword"`
+	}
+	EditPasswordResponse {
+		Base
+	}
+)
+
+service User {
+	@handler Login
+	post /login (LoginRequest) returns (LoginResponse)
+
+	@handler Register
+	post /register (RegisterRequest) returns (RegisterResponse)
+}
+
+@server (
+	jwt: Auth
+)
+service User {
+	@handler Logout
+	post /logout (LogoutRequest) returns (LogoutResponse)
+
+	@handler GetAllUser
+	get /admin/user (GetAllUserRequest) returns (GetAllUserResponse)
+
+	@handler GetUserById
+	get /admin/user/:id (GetUserByIdRequest) returns (GetUserByIdResponse)
+
+	@handler GetUserByName
+	get /admin/user/username (GetUserByNameRequest) returns (GetUserByNameResponse)
+
+	@handler AddUser
+	post /admin/user (AddUserRequest) returns (AddUserResponse)
+
+	@handler UpdateUserInfo
+	put /admin/user/editPassword (UpdateUserInfoRequest) returns (UpdateUserInfoResponse)
+
+	@handler DeleteUser
+	delete /admin/user (DeleteUserRequest) returns (DeleteUserResponse)
+
+	@handler EditPassword
+	put /admin/user (EditPasswordRequest) returns (EditPasswordResponse)
+}
+

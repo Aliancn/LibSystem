@@ -1,0 +1,7 @@
+syntax =  "v1"
+
+type Base {
+    Code int64    `json:"code"`
+    Msg  string `json:"msg"`
+}
+

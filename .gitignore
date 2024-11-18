@@ -1,4 +1,4 @@
 /data/
 /uploads/papers/
 /.idea/
-/service/
+.DS_Store

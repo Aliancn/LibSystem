@@ -1,0 +1,84 @@
+syntax = "v1"
+
+type (
+	// get all
+	GetAllPaperRequest struct{}
+	PaperVO            {
+		PaperId       int64  `json:"paper_id"`     //论文id
+		Title         string `json:"title"`        //标题
+		Author        string `json:"author"`       //作者
+		Department    string `json:"department"`   //所属部门
+		Year          string `json:"year"`         //年份
+		Status        string `json:"status"`       //状态
+		DownloadTimes int64  `json:"download_num"` //下载次数
+		FilePath      string `json:"file_path"`    //文件路径
+		CreateTime    string `json:"upload_time"`  //创建时间
+	}
+	PaperList {
+		List []PaperVO `json:"paper_list"`
+	}
+	GetAllPaperResponse {
+		Code int       `json:"code"`
+		Msg  string    `json:"msg"`
+		Data PaperList `json:"data"`
+	}
+	// get by id
+	GetPaperByIdRequest {
+		PaperId int64 `path:"id"`
+	}
+	GetPaperByIdResponse {
+		Code int     `json:"code"`
+		Msg  string  `json:"msg"`
+		Data PaperVO `json:"data"`
+	}
+	// get by name
+	GetPaperByTitleRequest {
+		Title string `form:"title"`
+	}
+	GetPaperByTitleResponse {
+		Code int       `json:"code"`
+		Msg  string    `json:"msg"`
+		Data PaperList `json:"data"`
+	}
+	// add
+	AddPaperRequest {
+		Title      string `form:"title"`
+		Author     string `form:"author"`
+		Department string `form:"department"`
+		Year       string `form:"year"`
+		// File file  -- r.FormFile("file")
+	}
+	AddPaperResponse {
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+	}
+	// delete
+	DeletePaperRequest {
+		PaperId int64 `path:"id"`
+	}
+	DeletePaperResponse {
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+	}
+	// update
+	UpdatePaperRequest {
+		PaperId    int64  `json:"paper_id"`
+		Title      string `json:"title"`
+		Author     string `json:"author"`
+		Department string `json:"department"`
+		Year       string `json:"year"`
+		Status     string `json:"status"`
+	}
+	UpdatePaperResponse {
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+	}
+	// download
+	DownloadPaperRequest {
+		PaperId int64 `path:"id"`
+	}
+	DownloadPaperResponse {
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+	}
+)
