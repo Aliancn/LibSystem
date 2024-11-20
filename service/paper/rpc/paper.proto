@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package paper_rpc;
+
+option go_package = "./paper_rpc_pb";
+
+// 定义消息类型
+message PaperVO {
+    int64 paper_id = 1;     // 论文id
+    string title = 2;       // 标题
+    string author = 3;      // 作者
+    string department = 4;  // 所属部门
+    string year = 5;        // 年份
+    string status = 6;      // 状态
+    int64 download_num = 7; // 下载次数
+    string file_path = 8;   // 文件路径
+    string upload_time = 9; // 创建时间
+}
+
+message PaperList {
+    repeated PaperVO paper_list = 1;
+}
+
+message GetAllPaperRequest {}
+
+message GetAllPaperResponse {
+    int32 code = 1;
+    string msg = 2;
+    PaperList data = 3;
+}
+
+message GetPaperByIdRequest {
+    int64 id = 1;
+}
+
+message GetPaperByIdResponse {
+    int32 code = 1;
+    string msg = 2;
+    PaperVO data = 3;
+}
+
+message GetPaperByTitleRequest {
+    string title = 1;
+}
+
+message GetPaperByTitleResponse {
+    int32 code = 1;
+    string msg = 2;
+    PaperList data = 3;
+}
+
+message AddPaperRequest {
+    string title = 1;
+    string author = 2;
+    string department = 3;
+    string year = 4;
+    bytes file = 5; // 文件内容
+}
+
+message AddPaperResponse {
+    int32 code = 1;
+    string msg = 2;
+}
+
+message DeletePaperRequest {
+    int64 id = 1;
+}
+
+message DeletePaperResponse {
+    int32 code = 1;
+    string msg = 2;
+}
+
+message UpdatePaperRequest {
+    int64 paper_id = 1;
+    string title = 2;
+    string author = 3;
+    string department = 4;
+    string year = 5;
+    string status = 6;
+}
+
+message UpdatePaperResponse {
+    int32 code = 1;
+    string msg = 2;
+}
+
+message DownloadPaperRequest {
+    int64 id = 1;
+}
+
+message DownloadPaperResponse {
+    int32 code = 1;
+    string msg = 2;
+}
+
+// 定义服务
+service PaperService {
+    rpc GetAllPaper(GetAllPaperRequest) returns (GetAllPaperResponse);
+    rpc GetPaperById(GetPaperByIdRequest) returns (GetPaperByIdResponse);
+    rpc GetPaperByTitle(GetPaperByTitleRequest) returns (GetPaperByTitleResponse);
+    rpc AddPaper(AddPaperRequest) returns (AddPaperResponse);
+    rpc DeletePaper(DeletePaperRequest) returns (DeletePaperResponse);
+    rpc UpdatePaper(UpdatePaperRequest) returns (UpdatePaperResponse);
+    rpc DownloadPaper(DownloadPaperRequest) returns (DownloadPaperResponse);
+}

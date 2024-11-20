@@ -1,0 +1,12 @@
+Name: paper.rpc
+ListenOn: 0.0.0.0:8080
+Etcd:
+  Hosts:
+    - 127.0.0.1:2379
+  Key: paper.rpc
+Pgsql:
+  DataSource: postgres://postgres:postgres@127.0.0.1:5432/db_library?sslmode=disable&timezone=Asia/Shanghai
+CacheRedis:
+  - Host: 127.0.0.1:6379
+    Type: node
+    Pass:

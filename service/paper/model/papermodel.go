@@ -1,6 +1,13 @@
 package model
 
-import "github.com/zeromicro/go-zero/core/stores/sqlx"
+import (
+	"context"
+	"database/sql"
+	"fmt"
+
+	"github.com/zeromicro/go-zero/core/stores/cache"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
+)
 
 var _ PaperModel = (*customPaperModel)(nil)
 
@@ -9,7 +16,8 @@ type (
 	// and implement the added methods in customPaperModel.
 	PaperModel interface {
 		paperModel
-		withSession(session sqlx.Session) PaperModel
+		GetAllPaper(ctx context.Context) ([]*Paper, error)
+		GetPaperByTitle(ctx context.Context, title string) ([]*Paper, error)
 	}
 
 	customPaperModel struct {
@@ -18,12 +26,37 @@ type (
 )
 
 // NewPaperModel returns a model for the database table.
-func NewPaperModel(conn sqlx.SqlConn) PaperModel {
+func NewPaperModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option) PaperModel {
 	return &customPaperModel{
-		defaultPaperModel: newPaperModel(conn),
+		defaultPaperModel: newPaperModel(conn, c, opts...),
 	}
 }
 
-func (m *customPaperModel) withSession(session sqlx.Session) PaperModel {
-	return NewPaperModel(sqlx.NewSqlConnFromSession(session))
+func (m *customPaperModel) GetAllPaper(ctx context.Context) ([]*Paper, error) {
+	query := fmt.Sprintf("SELECT %s FROM %s", paperRows, m.table)
+	var resp []*Paper
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query)
+	switch err {
+	case nil:
+		return resp, nil
+	case sql.ErrNoRows:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+// GetPaperByTitle returns a Paper object by title.
+func (m *customPaperModel) GetPaperByTitle(ctx context.Context, title string) ([]*Paper, error) {
+	query := fmt.Sprintf("SELECT %s FROM %s WHERE title like ?", paperRows, m.table)
+	var resp []*Paper
+	err := m.QueryRowNoCacheCtx(ctx, &resp, query, title)
+	switch err {
+	case nil:
+		return resp, nil
+	case sql.ErrNoRows:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
 }
