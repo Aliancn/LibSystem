@@ -17,5 +17,6 @@ func (br *UBorrowRouter) InitApiRouter(router *gin.RouterGroup) {
 	{
 		borrowRouter.POST("", borrowCtl.Borrow)
 		borrowRouter.PUT("/:id", borrowCtl.Return)
+		borrowRouter.GET("", borrowCtl.GetByUser)
 	}
 }

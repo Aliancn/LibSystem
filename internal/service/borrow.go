@@ -25,8 +25,8 @@ type BorrowService struct {
 func (b BorrowService) BorrowPaper(ctx *gin.Context, userID, bookID uint) error {
 
 	bo := model.Borrow{
-		BorrowDate: time.Time{},
-		ReturnDate: time.Time{},
+		BorrowDate: time.Now(),
+		ReturnDate: time.Now(),
 		BookID:     int(bookID),
 		UserID:     int(userID),
 	}
