@@ -65,3 +65,5 @@ services:
       - ./data/uploads/:/app/uploads/
     ports:
       - '8080:8080'
+    networks:
+      - backend

@@ -33,6 +33,9 @@ func InitDatabase(dsn string) *gorm.DB {
 		},
 	})
 	if err != nil {
+		global.Log.Info("数据库连接dsn", dsn)
+		global.Log.Error("数据库连接失败", err)
+
 		panic(err)
 	}
 
