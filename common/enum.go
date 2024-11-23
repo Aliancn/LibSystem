@@ -37,7 +37,8 @@ const (
 	RoleAdmin = "admin"
 	RoleUser  = "user"
 
-	// book/paper status
+	// book - available borrowed 
+	// borrow - borrowed returned
 	StatusAvailable = "available"
 	StatusBorrowed  = "borrowed"
 	StatusArchived  = "archived"
@@ -51,19 +52,40 @@ var (
 	Error_ALREADY_EXISTS                 = errors.New("已存在")
 	Error_UNKNOWN_ERROR                  = errors.New("未知错误")
 	Error_USER_NOT_LOGIN                 = errors.New("用户未登录")
-	Error_CATEGORY_BE_RELATED_BY_SETMEAL = errors.New("当前分类关联了套餐,不能删除")
-	Error_CATEGORY_BE_RELATED_BY_DISH    = errors.New("当前分类关联了菜品,不能删除")
-	Error_SHOPPING_CART_IS_NULL          = errors.New("购物车数据为空，不能下单")
-	Error_ADDRESS_BOOK_IS_NULL           = errors.New("用户地址为空，不能下单")
 	Error_LOGIN_FAILED                   = errors.New("登录失败")
 	Error_UPLOAD_FAILED                  = errors.New("文件上传失败")
-	Error_SETMEAL_ENABLE_FAILED          = errors.New("套餐内包含未启售菜品，无法启售")
 	Error_PASSWORD_EDIT_FAILED           = errors.New("密码修改失败")
-	Error_DISH_ON_SALE                   = errors.New("起售中的菜品不能删除")
-	Error_SETMEAL_ON_SALE                = errors.New("起售中的套餐不能删除")
-	Error_DISH_BE_RELATED_BY_SETMEAL     = errors.New("当前菜品关联了套餐,不能删除")
-	Error_ORDER_STATUS_ERROR             = errors.New("订单状态错误")
-	Error_ORDER_NOT_FOUND                = errors.New("订单不存在")
+	// book
+	Error_BOOK_NOT_FOUND                 = errors.New("书籍不存在")
+	Error_BOOK_BORROWED                  = errors.New("书籍已被借出")
+	Error_BOOK_RETURN_FAILED             = errors.New("书籍归还失败")
+	Error_BOOK_DELETE_FAILED             = errors.New("书籍删除失败")
+	Error_BOOK_CREATE_FAILED             = errors.New("书籍创建失败")
+	Error_BOOK_UPDATE_FAILED             = errors.New("书籍更新失败")
+	Error_BOOK_BORROW_FAILED             = errors.New("书籍借阅失败")
+	Error_BOOK_RETURNED                  = errors.New("书籍已归还")
+	Error_BOOK_BORROW_FAILED_NOT_FOUND   = errors.New("借阅记录不存在")
+	Error_BOOK_BORROW_FAILED_NOT_ALLOWED = errors.New("不允许借阅")
+	// borrow
+	Error_BORROW_NOT_FOUND               = errors.New("借阅记录不存在")
+	Error_BORROW_CREATE_FAILED           = errors.New("借阅记录创建失败")
+	Error_BORROW_UPDATE_FAILED           = errors.New("借阅记录更新失败")
+	Error_BORROW_DELETE_FAILED           = errors.New("借阅记录删除失败")
+	Error_BORROW_GET_FAILED              = errors.New("借阅记录获取失败")
+	Error_BORROW_GET_BY_USER_FAILED      = errors.New("借阅记录获取失败")
+	// user
+	Error_USER_NOT_FOUND                 = errors.New("用户不存在")
+	Error_USER_CREATE_FAILED             = errors.New("用户创建失败")
+	Error_USER_UPDATE_FAILED             = errors.New("用户更新失败")
+	Error_USER_DELETE_FAILED             = errors.New("用户删除失败")
+	Error_USER_GET_FAILED                = errors.New("用户获取失败")
+	Error_USER_GET_BY_NAME_FAILED        = errors.New("用户获取失败")
+	Error_USER_GET_BY_ID_FAILED          = errors.New("用户获取失败")
+	Error_USER_GET_BY_ROLE_FAILED        = errors.New("用户获取失败")
+	Error_USER_GET_BY_ROLE_NAME_FAILED   = errors.New("用户获取失败")
+	Error_USER_GET_BY_ROLE_ID_FAILED     = errors.New("用户获取失败")
+	Error_USER_GET_BY_ROLE_NAME_ID_FAILED = errors.New("用户获取失败")
+
 )
 
 type Result struct {

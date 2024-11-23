@@ -12,7 +12,7 @@ type BorrowRouter struct {
 }
 
 func (br *BorrowRouter) InitApiRouter(router *gin.RouterGroup) {
-	borrowCtl := controller.NewBorrowController(service.NewBorrowService(dao.NewBorrowDao(global.DB)))
+	borrowCtl := controller.NewBorrowController(service.NewBorrowService(dao.NewBorrowDao(global.DB), dao.NewBookDao(global.DB)))
 	borrowRouter := router.Group("/borrows")
 	{
 		borrowRouter.GET("", borrowCtl.GetAll)

@@ -20,6 +20,7 @@ type IBorrowService interface {
 
 type BorrowService struct {
 	borrowRepo repository.BorrowRepo
+	bookRepo   repository.BookRepo
 }
 
 func (b BorrowService) BorrowPaper(ctx *gin.Context, userID, bookID uint) error {
@@ -30,8 +31,20 @@ func (b BorrowService) BorrowPaper(ctx *gin.Context, userID, bookID uint) error 
 		BookID:     int(bookID),
 		UserID:     int(userID),
 	}
-
-	err := b.borrowRepo.Create(ctx, bo)
+	book, err := b.bookRepo.GetByID(ctx, int(bookID))
+	if err != nil {
+		return err
+	}
+	if book.Status == common.StatusBorrowed {
+		return common.Error_BOOK_BORROWED
+	}
+	// book -> borrowed
+	book.Status = common.StatusBorrowed
+	err = b.bookRepo.Update(ctx, book)
+	if err != nil {
+		return err
+	}
+	err = b.borrowRepo.Create(ctx, bo)
 	if err != nil {
 		return err
 	}
@@ -39,12 +52,23 @@ func (b BorrowService) BorrowPaper(ctx *gin.Context, userID, bookID uint) error 
 }
 
 func (b BorrowService) ReturnPaper(ctx *gin.Context, id uint) error {
-	bo := model.Borrow{
-		ID:         id,
-		ReturnDate: time.Now(),
-		Status:     common.StatusReturned,
+	bo, err := b.borrowRepo.GetByID(ctx, int(id))
+	if err != nil {
+		return err
 	}
-	err := b.borrowRepo.Update(ctx, bo)
+	bo.Status = common.StatusReturned
+	bo.ReturnDate = time.Now()
+	book, err := b.bookRepo.GetByID(ctx, bo.BookID)
+	if err != nil {
+		return err
+	}
+	// book -> available
+	book.Status = common.StatusAvailable
+	err = b.bookRepo.Update(ctx, book)
+	if err != nil {
+		return err
+	}
+	err = b.borrowRepo.Update(ctx, bo)
 	if err != nil {
 		return err
 	}
@@ -97,6 +121,6 @@ func (b BorrowService) GetByUserID(ctx *gin.Context, userID int) ([]response.Bor
 	return res, nil
 }
 
-func NewBorrowService(borrowRepo repository.BorrowRepo) IBorrowService {
-	return &BorrowService{borrowRepo: borrowRepo}
+func NewBorrowService(borrowRepo repository.BorrowRepo, bookRepo repository.BookRepo) IBorrowService {
+	return &BorrowService{borrowRepo: borrowRepo, bookRepo: bookRepo}
 }
