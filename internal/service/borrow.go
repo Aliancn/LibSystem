@@ -11,9 +11,9 @@ import (
 )
 
 type IBorrowService interface {
-	BorrowPaper(ctx *gin.Context, userID, paperID uint) error
-	ReturnPaper(ctx *gin.Context, id uint) error
-	DeletePaper(ctx *gin.Context, id uint) error
+	BorrowBook(ctx *gin.Context, userID, bookID uint) error
+	ReturnBook(ctx *gin.Context, id uint) error
+	DeleteBook(ctx *gin.Context, id uint) error
 	GetAll(ctx *gin.Context) ([]response.BorrowVO, error)
 	GetByUserID(ctx *gin.Context, userID int) ([]response.BorrowVO, error)
 }
@@ -23,7 +23,7 @@ type BorrowService struct {
 	bookRepo   repository.BookRepo
 }
 
-func (b BorrowService) BorrowPaper(ctx *gin.Context, userID, bookID uint) error {
+func (b BorrowService) BorrowBook(ctx *gin.Context, userID, bookID uint) error {
 
 	bo := model.Borrow{
 		BorrowDate: time.Now(),
@@ -51,7 +51,7 @@ func (b BorrowService) BorrowPaper(ctx *gin.Context, userID, bookID uint) error 
 	return nil
 }
 
-func (b BorrowService) ReturnPaper(ctx *gin.Context, id uint) error {
+func (b BorrowService) ReturnBook(ctx *gin.Context, id uint) error {
 	bo, err := b.borrowRepo.GetByID(ctx, int(id))
 	if err != nil {
 		return err
@@ -75,7 +75,7 @@ func (b BorrowService) ReturnPaper(ctx *gin.Context, id uint) error {
 	return nil
 }
 
-func (b BorrowService) DeletePaper(ctx *gin.Context, id uint) error {
+func (b BorrowService) DeleteBook(ctx *gin.Context, id uint) error {
 	err := b.borrowRepo.Delete(ctx, int(id))
 	if err != nil {
 		return err

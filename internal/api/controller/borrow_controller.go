@@ -23,7 +23,7 @@ func (b *BorrowController) Borrow(ctx *gin.Context) {
 	code := common.SUCCESS
 	user, _ := strconv.Atoi(ctx.Query("user_id"))
 	book, _ := strconv.Atoi(ctx.Query("book_id"))
-	err := b.service.BorrowPaper(ctx, uint(user), uint(book))
+	err := b.service.BorrowBook(ctx, uint(user), uint(book))
 	if err != nil {
 		code = common.ERROR
 		global.Log.Warn("borrowController GetBookByTitle Error:", err.Error())
@@ -43,7 +43,7 @@ func (b *BorrowController) Borrow(ctx *gin.Context) {
 func (b *BorrowController) Return(ctx *gin.Context) {
 	code := common.SUCCESS
 	id, _ := strconv.Atoi(ctx.Param("id"))
-	err := b.service.ReturnPaper(ctx, uint(id))
+	err := b.service.ReturnBook(ctx, uint(id))
 	if err != nil {
 		code = common.ERROR
 		global.Log.Warn("borrowController ReturnPaper Error:", err.Error())
@@ -63,7 +63,7 @@ func (b *BorrowController) Return(ctx *gin.Context) {
 func (b *BorrowController) Delete(ctx *gin.Context) {
 	code := common.SUCCESS
 	id, _ := strconv.Atoi(ctx.Param("id"))
-	err := b.service.DeletePaper(ctx, uint(id))
+	err := b.service.DeleteBook(ctx, uint(id))
 	if err != nil {
 		code = common.ERROR
 		global.Log.Warn("borrowController DeletePaper Error:", err.Error())

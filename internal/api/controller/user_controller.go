@@ -5,9 +5,10 @@ import (
 	"LibSystem/global"
 	"LibSystem/internal/api/request"
 	"LibSystem/internal/service"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 type UserController struct {
@@ -47,8 +48,7 @@ func (uc *UserController) Login(ctx *gin.Context) {
 
 func (uc *UserController) Logout(ctx *gin.Context) {
 	code := common.SUCCESS
-	var err error
-	err = uc.service.Logout(ctx)
+	err := uc.service.Logout(ctx)
 	if err != nil {
 		code = common.ERROR
 		global.Log.Warn("UserController login Error:", err.Error())
@@ -93,6 +93,11 @@ func (uc *UserController) GetById(ctx *gin.Context) {
 	code := common.SUCCESS
 	var userId request.UserID
 	uid, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		code = common.ERROR
+		global.Log.Debug("UserController GetById 解析失败")
+		return
+	}
 	userId.UserId = int64(uid)
 
 	resp, err := uc.service.GetById(ctx, userId)

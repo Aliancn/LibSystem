@@ -192,6 +192,15 @@ func (pc *PaperController) DeletePaper(ctx *gin.Context) {
 		return
 	}
 	err = os.Remove(filePath)
+	if err != nil {
+		code = common.ERROR
+		global.Log.Warn("PaperController DeletePaper Error:", err.Error())
+		ctx.JSON(http.StatusOK, common.Result{
+			Code: code,
+			Msg:  err.Error(),
+		})
+		return
+	}
 	err = pc.service.DeletePaper(ctx, id)
 	if err != nil {
 		code = common.ERROR

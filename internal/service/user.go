@@ -197,6 +197,7 @@ func (u UserService) UpdateUser(ctx *gin.Context, update request.UserDTO) error 
 	}
 	entity := model.User{
 		ID:    uint(update.UserId),
+		Role:  update.Role,
 		Name:  update.Name,
 		Phone: update.Phone,
 		Email: update.Email,
