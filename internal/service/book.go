@@ -1,10 +1,12 @@
 package service
 
 import (
+	"LibSystem/common"
 	"LibSystem/internal/api/request"
 	"LibSystem/internal/api/response"
 	"LibSystem/internal/model"
 	"LibSystem/internal/repository"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -120,7 +122,14 @@ func (b BookService) UpdateBook(ctx *gin.Context, update request.BookDTO) error 
 }
 
 func (b BookService) DeleteBook(ctx *gin.Context, id int) error {
-	err := b.repo.Delete(ctx, id)
+	Book,err  := b.repo.GetByID(ctx, id)
+	if err != nil {
+		return err
+	}
+	if Book.Status == "Borrowed" {
+		return common.Error_BOOK_BORROWED
+	}
+	err = b.repo.Delete(ctx, id)
 	if err != nil {
 		return err
 	}
