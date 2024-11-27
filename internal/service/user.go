@@ -26,7 +26,7 @@ type IUserService interface {
 	GetByUsername(ctx *gin.Context, username request.Username) (response.UserVO, error)
 	RegisterRole(ctx *gin.Context, register request.UserRegister) error
 	RegisterAdmin(ctx *gin.Context, register request.UserRegister) error
-	GetList(ctx *gin.Context, pageID ,pageSize int) (response.UserList, error)
+	GetList(ctx *gin.Context, pageID, pageSize int) (response.UserList, error)
 }
 
 type UserService struct {
@@ -69,7 +69,7 @@ func (u UserService) GetByUsername(ctx *gin.Context, username request.Username) 
 	}, nil
 }
 
-func (u UserService) GetList(ctx *gin.Context, pageID , pageSize int) (response.UserList, error) {
+func (u UserService) GetList(ctx *gin.Context, pageID, pageSize int) (response.UserList, error) {
 	list, err := u.repo.GetAll(ctx, pageID, pageSize)
 	if err != nil {
 		return response.UserList{}, err
@@ -99,7 +99,7 @@ func (u UserService) Login(ctx *gin.Context, login request.UserLogin) (response.
 	if user == nil {
 		return response.UserLoginInfo{}, common.Error_ACCOUNT_NOT_FOUND
 	}
-	hashPassword := utils.MD5V(login.Password, "", 0)
+	hashPassword := utils.MD5V(login.Password, "alia", 1)
 	if user.Password != hashPassword {
 		return response.UserLoginInfo{}, common.Error_PASSWORD_ERROR
 	}
@@ -125,7 +125,7 @@ func (u UserService) RegisterRole(ctx *gin.Context, register request.UserRegiste
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return common.Error_ALREADY_EXISTS
 	}
-	hashPassword := utils.MD5V(register.Password, "", 0)
+	hashPassword := utils.MD5V(register.Password, "alia", 1)
 	entity := model.User{
 		Username: register.Username,
 		Password: hashPassword,
@@ -140,7 +140,7 @@ func (u UserService) RegisterAdmin(ctx *gin.Context, register request.UserRegist
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return common.Error_ALREADY_EXISTS
 	}
-	hashPassword := utils.MD5V(register.Password, "", 0)
+	hashPassword := utils.MD5V(register.Password, "alia", 1)
 	entity := model.User{
 		Username: register.Username,
 		Password: hashPassword,
@@ -151,10 +151,10 @@ func (u UserService) RegisterAdmin(ctx *gin.Context, register request.UserRegist
 }
 
 func (u UserService) AddUser(ctx *gin.Context, add request.UserDTO) error {
-	password := utils.MD5V(add.Password, "", 0)
+	hashPassword := utils.MD5V(add.Password, "alia", 1)
 	entity := model.User{
 		Username: add.Username,
-		Password: password,
+		Password: hashPassword,
 		Role:     add.Role,
 		Name:     add.Name,
 		Phone:    add.Phone,
@@ -174,12 +174,12 @@ func (u UserService) EditPassword(ctx *gin.Context, reqs request.UserEditPasswor
 	if user == nil {
 		return common.Error_ACCOUNT_NOT_FOUND
 	}
-	oldHashPassword := utils.MD5V(reqs.OldPassword, "", 0)
+	oldHashPassword := utils.MD5V(reqs.OldPassword, "alia", 1)
 	if user.Password != oldHashPassword {
 		return common.Error_PASSWORD_ERROR
 	}
 	// 修改用户密码
-	newHashPassword := utils.MD5V(reqs.NewPassword, "", 0)
+	newHashPassword := utils.MD5V(reqs.NewPassword, "alia", 1)
 	err = u.repo.Update(ctx, model.User{
 		ID:       uint(reqs.UserId),
 		Password: newHashPassword,
