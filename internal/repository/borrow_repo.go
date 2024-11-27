@@ -6,7 +6,7 @@ import (
 )
 
 type BorrowRepo interface {
-	GetAll(ctx context.Context) ([]model.Borrow, error)
+	GetAll(ctx context.Context, pageID, pageSize int) ([]model.Borrow, error)
 	GetByID(ctx context.Context, id int) (model.Borrow, error)
 	Update(ctx context.Context, borrow model.Borrow) error
 	Delete(ctx context.Context, id int) error

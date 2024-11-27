@@ -4,6 +4,7 @@ import (
 	"LibSystem/internal/model"
 	"LibSystem/internal/repository"
 	"context"
+
 	"gorm.io/gorm"
 )
 
@@ -11,9 +12,10 @@ type BookDao struct {
 	db *gorm.DB
 }
 
-func (b BookDao) GetAll(ctx context.Context) ([]model.Book, error) {
+func (b BookDao) GetAll(ctx context.Context, pageID, pageSize int) ([]model.Book, error) {
 	var books []model.Book
-	err := b.db.Find(&books).Error
+	// err := b.db.Find(&books).Error
+	err := b.db.Offset((pageID - 1) * pageSize).Limit(pageSize).Find(&books).Error
 	if err != nil {
 		return nil, err
 	}

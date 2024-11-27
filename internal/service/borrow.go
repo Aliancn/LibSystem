@@ -14,7 +14,7 @@ type IBorrowService interface {
 	BorrowBook(ctx *gin.Context, userID, bookID uint) error
 	ReturnBook(ctx *gin.Context, id uint) error
 	DeleteBook(ctx *gin.Context, id uint) error
-	GetAll(ctx *gin.Context) ([]response.BorrowVO, error)
+	GetAll(ctx *gin.Context, pageID, pageSize int) ([]response.BorrowVO, error)
 	GetByUserID(ctx *gin.Context, userID int) ([]response.BorrowVO, error)
 }
 
@@ -40,6 +40,7 @@ func (b BorrowService) BorrowBook(ctx *gin.Context, userID, bookID uint) error {
 	}
 	// book -> borrowed
 	book.Status = common.StatusBorrowed
+	book.BorrowTimes += 1 // 借阅次数+1
 	err = b.bookRepo.Update(ctx, book)
 	if err != nil {
 		return err
@@ -83,8 +84,8 @@ func (b BorrowService) DeleteBook(ctx *gin.Context, id uint) error {
 	return nil
 }
 
-func (b BorrowService) GetAll(ctx *gin.Context) ([]response.BorrowVO, error) {
-	borrows, err := b.borrowRepo.GetAll(ctx)
+func (b BorrowService) GetAll(ctx *gin.Context, pageID, pageSize int) ([]response.BorrowVO, error) {
+	borrows, err := b.borrowRepo.GetAll(ctx, pageID, pageSize)
 	if err != nil {
 		return nil, err
 	}

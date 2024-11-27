@@ -239,7 +239,21 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 
 func (uc *UserController) GetList(ctx *gin.Context) {
 	code := common.SUCCESS
-	resp, err := uc.service.GetList(ctx)
+	page_id := ctx.Query("page_id")
+	page_size := ctx.Query("page_size")
+	pageId, err := strconv.Atoi(page_id)
+	if err != nil {	
+		code = common.ERROR
+		global.Log.Debug("UserController GetList page_id解析失败")
+		return
+	}
+	pageSize, err := strconv.Atoi(page_size)
+	if err != nil {
+		code = common.ERROR
+		global.Log.Debug("UserController GetList page_size解析失败")
+		return
+	}
+	resp, err := uc.service.GetList(ctx, pageId, pageSize)
 	if err != nil {
 		code = common.ERROR
 		global.Log.Warn("UserController GetList Error:", err.Error())

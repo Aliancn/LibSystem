@@ -4,6 +4,7 @@ import (
 	"LibSystem/internal/model"
 	"LibSystem/internal/repository"
 	"context"
+
 	"gorm.io/gorm"
 )
 
@@ -52,9 +53,10 @@ func (p PaperDao) Delete(ctx context.Context, id uint) error {
 	return err
 }
 
-func (p PaperDao) GetAll(ctx context.Context) ([]model.Paper, error) {
+func (p PaperDao) GetAll(ctx context.Context, pageID, pageSize int) ([]model.Paper, error) {
 	var papers []model.Paper
-	err := p.db.WithContext(ctx).Find(&papers).Error
+	// err := p.db.WithContext(ctx).Find(&papers).Error
+	err := p.db.WithContext(ctx).Limit(pageSize).Offset((pageID - 1) * pageSize).Find(&papers).Error
 	if err != nil {
 		return nil, err
 	}

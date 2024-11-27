@@ -11,7 +11,7 @@ import (
 )
 
 type IBookService interface {
-	GetBookList(ctx *gin.Context) (response.BookList, error)
+	GetBookList(ctx *gin.Context, pageID, pageSize int) (response.BookList, error)
 	GetBookById(ctx *gin.Context, id int) (response.BookVO, error)
 	GetBookByTitle(ctx *gin.Context, title string) (response.BookList, error)
 	AddBook(ctx *gin.Context, add request.BookDTO) error
@@ -23,9 +23,9 @@ type BookService struct {
 	repo repository.BookRepo
 }
 
-func (b BookService) GetBookList(ctx *gin.Context) (response.BookList, error) {
+func (b BookService) GetBookList(ctx *gin.Context, pageID, pageSize int) (response.BookList, error) {
 	var bookList response.BookList
-	books, err := b.repo.GetAll(ctx)
+	books, err := b.repo.GetAll(ctx, pageID, pageSize)
 	if err != nil {
 		return bookList, err
 	}
@@ -122,7 +122,7 @@ func (b BookService) UpdateBook(ctx *gin.Context, update request.BookDTO) error 
 }
 
 func (b BookService) DeleteBook(ctx *gin.Context, id int) error {
-	Book,err  := b.repo.GetByID(ctx, id)
+	Book, err := b.repo.GetByID(ctx, id)
 	if err != nil {
 		return err
 	}

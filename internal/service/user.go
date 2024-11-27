@@ -26,7 +26,7 @@ type IUserService interface {
 	GetByUsername(ctx *gin.Context, username request.Username) (response.UserVO, error)
 	RegisterRole(ctx *gin.Context, register request.UserRegister) error
 	RegisterAdmin(ctx *gin.Context, register request.UserRegister) error
-	GetList(ctx *gin.Context) (response.UserList, error)
+	GetList(ctx *gin.Context, pageID ,pageSize int) (response.UserList, error)
 }
 
 type UserService struct {
@@ -69,8 +69,8 @@ func (u UserService) GetByUsername(ctx *gin.Context, username request.Username) 
 	}, nil
 }
 
-func (u UserService) GetList(ctx *gin.Context) (response.UserList, error) {
-	list, err := u.repo.GetAll(ctx)
+func (u UserService) GetList(ctx *gin.Context, pageID , pageSize int) (response.UserList, error) {
+	list, err := u.repo.GetAll(ctx, pageID, pageSize)
 	if err != nil {
 		return response.UserList{}, err
 	}

@@ -82,7 +82,11 @@ func (b *BorrowController) Delete(ctx *gin.Context) {
 // GetAll 获取所有借阅记录
 func (b *BorrowController) GetAll(ctx *gin.Context) {
 	code := common.SUCCESS
-	resp, err := b.service.GetAll(ctx)
+	page_id := ctx.Query("page_id")
+	page_size := ctx.Query("page_size")
+	pageID, _ := strconv.Atoi(page_id)
+	pageSize, _ := strconv.Atoi(page_size)
+	resp, err := b.service.GetAll(ctx, pageID, pageSize)
 	if err != nil {
 		code = common.ERROR
 		global.Log.Warn("borrowController GetAll Error:", err.Error())

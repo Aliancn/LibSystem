@@ -17,7 +17,7 @@ type PaperRepo interface {
 	// Delete 删除数据
 	Delete(ctx context.Context, id uint) error
 	// GetAll 获取所有数据
-	GetAll(ctx context.Context) ([]model.Paper, error)
+	GetAll(ctx context.Context, pageID, pageSize int) ([]model.Paper, error)
 	//GetFilePath 获取文件路径
 	GetFilePath(ctx context.Context, id uint) (string, error)
 }

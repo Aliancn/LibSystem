@@ -24,7 +24,11 @@ func NewPaperController(service service.IPaperService) *PaperController {
 // GetPaperList 获取所有论文
 func (pc *PaperController) GetPaperList(ctx *gin.Context) {
 	code := common.SUCCESS
-	resp, err := pc.service.GetPaperList(ctx)
+	page_id := ctx.Query("page_id")
+	page_size := ctx.Query("page_size")
+	pageID ,_ := strconv.Atoi(page_id)
+	pageSise ,_ := strconv.Atoi(page_size)
+	resp, err := pc.service.GetPaperList(ctx, pageID, pageSise)
 	if err != nil {
 		code = common.ERROR
 		global.Log.Warn("PaperController GetList Error:", err.Error())

@@ -5,11 +5,12 @@ import (
 	"LibSystem/internal/api/response"
 	"LibSystem/internal/model"
 	"LibSystem/internal/repository"
+
 	"github.com/gin-gonic/gin"
 )
 
 type IPaperService interface {
-	GetPaperList(ctx *gin.Context) (response.PaperList, error)
+	GetPaperList(ctx *gin.Context, pageID, pageSize int) (response.PaperList, error)
 	GetPaperById(ctx *gin.Context, id int) (response.PaperVO, error)
 	GetPaperByTitle(ctx *gin.Context, title string) (response.PaperList, error)
 	AddPaper(ctx *gin.Context, add request.PaperDTO) error
@@ -22,8 +23,8 @@ type PaperService struct {
 	repo repository.PaperRepo
 }
 
-func (p PaperService) GetPaperList(ctx *gin.Context) (response.PaperList, error) {
-	list, err := p.repo.GetAll(ctx)
+func (p PaperService) GetPaperList(ctx *gin.Context, pageID, pageSize int) (response.PaperList, error) {
+	list, err := p.repo.GetAll(ctx, pageID, pageSize)
 	if err != nil {
 		return response.PaperList{}, err
 	}

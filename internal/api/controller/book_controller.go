@@ -5,9 +5,10 @@ import (
 	"LibSystem/global"
 	"LibSystem/internal/api/request"
 	"LibSystem/internal/service"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 type BookController struct {
@@ -20,7 +21,29 @@ func NewBookController(bookService service.IBookService) *BookController {
 
 func (bc *BookController) GetBookList(ctx *gin.Context) {
 	code := common.SUCCESS
-	resp, err := bc.service.GetBookList(ctx)
+	page_id := ctx.Query("page_id")
+	page_size := ctx.Query("page_size")
+	pageID, err := strconv.Atoi(page_id)
+	if err != nil {
+		code = common.ERROR
+		global.Log.Warn("bookController GetList Error:", err.Error())
+		ctx.JSON(http.StatusOK, common.Result{
+			Code: code,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	pageSize, err := strconv.Atoi(page_size)
+	if err != nil {
+		code = common.ERROR
+		global.Log.Warn("bookController GetList Error:", err.Error())
+		ctx.JSON(http.StatusOK, common.Result{
+			Code: code,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	resp, err := bc.service.GetBookList(ctx, pageID, pageSize)
 	if err != nil {
 		code = common.ERROR
 		global.Log.Warn("bookController GetList Error:", err.Error())

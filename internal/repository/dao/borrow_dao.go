@@ -17,9 +17,10 @@ func (b BorrowDao) Create(ctx context.Context, borrow model.Borrow) error {
 	return err
 }
 
-func (b BorrowDao) GetAll(ctx context.Context) ([]model.Borrow, error) {
+func (b BorrowDao) GetAll(ctx context.Context, pageID, pageSize int) ([]model.Borrow, error) {
 	var borrows []model.Borrow
-	err := b.db.WithContext(ctx).Find(&borrows).Error
+	// err := b.db.WithContext(ctx).Find(&borrows).Error
+	err := b.db.WithContext(ctx).Offset((pageID - 1) * pageSize).Limit(pageSize).Find(&borrows).Error
 	if err != nil {
 		return nil, err
 	}

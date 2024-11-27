@@ -38,9 +38,11 @@ func (u *UserDao) Insert(ctx context.Context, entity model.User) error {
 func (u *UserDao) Delete(ctx context.Context, id uint) error {
 	return u.db.WithContext(ctx).Delete(&model.User{}, id).Error
 }
-func (u *UserDao) GetAll(ctx context.Context) ([]model.User, error) {
+func (u *UserDao) GetAll(ctx context.Context, pageID, pageSize int) ([]model.User, error) {
 	var users []model.User
-	err := u.db.WithContext(ctx).Find(&users).Error
+	// 实现分页
+	err := u.db.WithContext(ctx).Offset((pageID - 1) * pageSize).Limit(pageSize).Find(&users).Error
+	// err := u.db.WithContext(ctx).Find(&users).Error
 	return users, err
 }
 
