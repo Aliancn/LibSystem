@@ -151,9 +151,10 @@ func (u UserService) RegisterAdmin(ctx *gin.Context, register request.UserRegist
 }
 
 func (u UserService) AddUser(ctx *gin.Context, add request.UserDTO) error {
+	password := utils.MD5V(add.Password, "", 0)
 	entity := model.User{
 		Username: add.Username,
-		Password: add.Password,
+		Password: password,
 		Role:     add.Role,
 		Name:     add.Name,
 		Phone:    add.Phone,

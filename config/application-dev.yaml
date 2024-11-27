@@ -27,12 +27,3 @@ jwt:
   secret: uOvKLmVfztaXGpNYd4Z0I1SiT7MweJhl # jwt加密密钥
   expire: 86400 # jwt过期时间
 
-alioss:
-  endpoint: YouOption
-  access_key_id: YouOption
-  access_key_secret: YouOption
-  bucket_name: YouOption
-
-wechat:
-  appid: YouOption
-  secret: YouOption
