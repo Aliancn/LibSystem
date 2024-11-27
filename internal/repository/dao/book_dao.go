@@ -15,7 +15,7 @@ type BookDao struct {
 func (b BookDao) GetAll(ctx context.Context, pageID, pageSize int) ([]model.Book, error) {
 	var books []model.Book
 	// err := b.db.Find(&books).Error
-	err := b.db.Offset((pageID - 1) * pageSize).Limit(pageSize).Find(&books).Error
+	err := b.db.WithContext(ctx).Offset((pageID - 1) * pageSize).Limit(pageSize).Find(&books).Error
 	if err != nil {
 		return nil, err
 	}
@@ -24,7 +24,7 @@ func (b BookDao) GetAll(ctx context.Context, pageID, pageSize int) ([]model.Book
 
 func (b BookDao) GetByID(ctx context.Context, id int) (model.Book, error) {
 	var book model.Book
-	err := b.db.First(&book, id).Error
+	err := b.db.WithContext(ctx).First(&book, id).Error
 	if err != nil {
 		return model.Book{}, err
 	}
@@ -33,7 +33,7 @@ func (b BookDao) GetByID(ctx context.Context, id int) (model.Book, error) {
 
 func (b BookDao) GetByTitle(ctx context.Context, title string) ([]model.Book, error) {
 	var books []model.Book
-	err := b.db.Where("title like ?", title).Find(&books).Error
+	err := b.db.WithContext(ctx).Where("title like ?", title).Find(&books).Error
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (b BookDao) GetByTitle(ctx context.Context, title string) ([]model.Book, er
 }
 
 func (b BookDao) Create(ctx context.Context, book model.Book) error {
-	err := b.db.Create(&book).Error
+	err := b.db.WithContext(ctx).Create(&book).Error
 	if err != nil {
 		return err
 	}
@@ -49,7 +49,7 @@ func (b BookDao) Create(ctx context.Context, book model.Book) error {
 }
 
 func (b BookDao) Update(ctx context.Context, book model.Book) error {
-	err := b.db.Updates(&book).Error
+	err := b.db.WithContext(ctx).Model(&book).Updates(book).Error
 	if err != nil {
 		return err
 	}
@@ -57,7 +57,7 @@ func (b BookDao) Update(ctx context.Context, book model.Book) error {
 }
 
 func (b BookDao) Delete(ctx context.Context, id int) error {
-	err := b.db.Delete(&model.Book{}, id).Error
+	err := b.db.WithContext(ctx).Delete(&model.Book{}, id).Error
 	if err != nil {
 		return err
 	}
@@ -66,7 +66,7 @@ func (b BookDao) Delete(ctx context.Context, id int) error {
 
 func (b BookDao) GetNum(ctx context.Context) (int, error) {
 	var count int64
-	err := b.db.Model(&model.Book{}).Count(&count).Error
+	err := b.db.WithContext(ctx).Model(&model.Book{}).Count(&count).Error
 	if err != nil {
 		return 0, err
 	}

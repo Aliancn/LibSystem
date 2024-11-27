@@ -28,7 +28,7 @@ func (u *UserDao) GetById(ctx context.Context, id uint) (*model.User, error) {
 
 // Update 动态修改
 func (u *UserDao) Update(ctx context.Context, user model.User) error {
-	return u.db.WithContext(ctx).Updates(&user).Error
+	return u.db.WithContext(ctx).Model(&user).Updates(user).Error
 }
 
 // Insert 插入数据

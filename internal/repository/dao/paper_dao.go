@@ -44,7 +44,7 @@ func (p PaperDao) GetById(ctx context.Context, id uint) (*model.Paper, error) {
 }
 
 func (p PaperDao) Update(ctx context.Context, paper model.Paper) error {
-	err := p.db.WithContext(ctx).Updates(&paper).Error
+	err := p.db.WithContext(ctx).Model(&paper).Updates(paper).Error
 	return err
 }
 

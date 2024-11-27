@@ -37,7 +37,7 @@ func (b BorrowDao) GetByID(ctx context.Context, id int) (model.Borrow, error) {
 }
 
 func (b BorrowDao) Update(ctx context.Context, borrow model.Borrow) error {
-	err := b.db.WithContext(ctx).Updates(&borrow).Error
+	err := b.db.WithContext(ctx).Model(&borrow).Updates(borrow).Error
 	return err
 }
 
