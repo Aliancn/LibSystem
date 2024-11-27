@@ -5,6 +5,8 @@ import (
 	"LibSystem/internal/api/controller"
 	"LibSystem/internal/repository/dao"
 	"LibSystem/internal/service"
+	"LibSystem/middle"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,9 +15,10 @@ type PaperRouter struct {
 
 func (pr *PaperRouter) InitApiRouter(router *gin.RouterGroup) {
 	paperCtl := controller.NewPaperController(service.NewPaperService(dao.NewPaperDao(global.DB)))
-	paperRouter := router.Group("/papers")
+	privatePaperRouter := router.Group("/papers")
+	privatePaperRouter.Use(middle.VerifyJWT())
 	{
-		paperRouter.DELETE("/:id", paperCtl.DeletePaper)
-		paperRouter.PUT("", paperCtl.UpdatePaper)
+		privatePaperRouter.DELETE("/:id", paperCtl.DeletePaper)
+		privatePaperRouter.PUT("", paperCtl.UpdatePaper)
 	}
 }

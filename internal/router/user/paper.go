@@ -5,6 +5,8 @@ import (
 	"LibSystem/internal/api/controller"
 	"LibSystem/internal/repository/dao"
 	"LibSystem/internal/service"
+	"LibSystem/middle"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,12 +15,14 @@ type UPaperRouter struct {
 
 func (pr *UPaperRouter) InitApiRouter(router *gin.RouterGroup) {
 	paperCtl := controller.NewPaperController(service.NewPaperService(dao.NewPaperDao(global.DB)))
-	paperRouter := router.Group("/papers")
+	publicPaperRouter := router.Group("/papers")
+	privatePaperRouter := router.Group("/papers")
+	privatePaperRouter.Use(middle.VerifyJWT())
 	{
-		paperRouter.GET("", paperCtl.GetPaperList)
-		paperRouter.GET("/:id", paperCtl.GetPaperById)
-		paperRouter.GET("/title", paperCtl.GetPaperByTitle)
-		paperRouter.POST("/upload", paperCtl.AddPaper)
-		paperRouter.GET("/download/:id", paperCtl.DownloadPaper)
+		publicPaperRouter.GET("", paperCtl.GetPaperList)
+		privatePaperRouter.GET("/:id", paperCtl.GetPaperById)
+		privatePaperRouter.GET("/title", paperCtl.GetPaperByTitle)
+		privatePaperRouter.POST("/upload", paperCtl.AddPaper)
+		privatePaperRouter.GET("/download/:id", paperCtl.DownloadPaper)
 	}
 }

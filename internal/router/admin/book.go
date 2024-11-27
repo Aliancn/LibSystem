@@ -5,6 +5,8 @@ import (
 	"LibSystem/internal/api/controller"
 	"LibSystem/internal/repository/dao"
 	"LibSystem/internal/service"
+	"LibSystem/middle"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,10 +15,11 @@ type BookRouter struct {
 
 func (br *BookRouter) InitApiRouter(router *gin.RouterGroup) {
 	bookCtl := controller.NewBookController(service.NewBookService(dao.NewBookDao(global.DB)))
-	bookRouter := router.Group("/books")
+	privateBookRouter := router.Group("/books")
+	privateBookRouter.Use(middle.VerifyJWT())
 	{
-		bookRouter.POST("", bookCtl.AddBook)
-		bookRouter.DELETE("/:id", bookCtl.DeleteBook)
-		bookRouter.PUT("", bookCtl.UpdateBook)
+		privateBookRouter.POST("", bookCtl.AddBook)
+		privateBookRouter.DELETE("/:id", bookCtl.DeleteBook)
+		privateBookRouter.PUT("", bookCtl.UpdateBook)
 	}
 }

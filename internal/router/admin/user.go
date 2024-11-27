@@ -5,23 +5,26 @@ import (
 	"LibSystem/internal/api/controller"
 	"LibSystem/internal/repository/dao"
 	"LibSystem/internal/service"
+	"LibSystem/middle"
+
 	"github.com/gin-gonic/gin"
 )
 
 type UserRouter struct{}
 
 func (ur *UserRouter) InitApiRouter(router *gin.RouterGroup) {
-	userrouter := router.Group("user")
 	userCtl := controller.NewUserController(service.NewUserService(
 		dao.NewUserDao(global.DB),
 	))
+	privateUserrouter := router.Group("user")
+	privateUserrouter.Use(middle.VerifyJWT())
 	{
-		userrouter.GET("/:id", userCtl.GetById)
-		userrouter.GET("/username", userCtl.GetByUsername)
-		userrouter.GET("", userCtl.GetList)
-		userrouter.POST("", userCtl.AddUser)
-		userrouter.PUT("/editPassword", userCtl.EditPassword)
-		userrouter.PUT("", userCtl.UpdateUser)
-		userrouter.DELETE("", userCtl.DeleteUser)
+		privateUserrouter.GET("/:id", userCtl.GetById)
+		privateUserrouter.GET("/username", userCtl.GetByUsername)
+		privateUserrouter.GET("", userCtl.GetList)
+		privateUserrouter.POST("", userCtl.AddUser)
+		privateUserrouter.PUT("/editPassword", userCtl.EditPassword)
+		privateUserrouter.PUT("", userCtl.UpdateUser)
+		privateUserrouter.DELETE("", userCtl.DeleteUser)
 	}
 }
