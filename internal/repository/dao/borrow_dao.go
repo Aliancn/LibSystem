@@ -1,10 +1,14 @@
 package dao
 
 import (
+	"LibSystem/global"
 	"LibSystem/internal/model"
 	"LibSystem/internal/repository"
 	"context"
+	"encoding/json"
+	"fmt"
 
+	"github.com/go-redis/redis"
 	"gorm.io/gorm"
 )
 
@@ -31,18 +35,64 @@ func (b BorrowDao) GetAll(ctx context.Context, pageID, pageSize int) ([]model.Bo
 }
 
 func (b BorrowDao) GetByID(ctx context.Context, id int) (model.Borrow, error) {
+	// TODO 返回值的类型
 	var borrow model.Borrow
-	err := b.db.WithContext(ctx).First(&borrow, id).Error
+	// 缓存
+	cacheKey := fmt.Sprintf("borrow:%d", id)
+	val, err := global.Redis.WithContext(ctx).Get(cacheKey).Result()
+	if err == redis.Nil {
+		fmt.Println("Cache miss, fetching from database...")
+	} else if err != nil {
+		return borrow, err
+	} else {
+		fmt.Println("Cache hit!")
+		err = json.Unmarshal([]byte(val), &borrow)
+		if err != nil {
+			return borrow, err
+		}
+	}
+	// 缓存中没有，从数据库中获取
+	err = b.db.WithContext(ctx).First(&borrow, id).Error
+	if err != nil {
+		return borrow, err
+	}
+	// 存入缓存
+	data, err := json.Marshal(borrow)
+	if err != nil {
+		return borrow, err
+	}
+	err = global.Redis.WithContext(ctx).Set(cacheKey, data, 0).Err()
+	if err != nil {
+		return borrow, err
+	}
 	return borrow, err
 }
 
 func (b BorrowDao) Update(ctx context.Context, borrow model.Borrow) error {
-	err := b.db.WithContext(ctx).Model(&borrow).Updates(borrow).Error
+	// 更新缓存
+	cacheKey := fmt.Sprintf("borrow:%d", borrow.ID)
+	val, err := json.Marshal(borrow)
+	if err != nil {
+		return err
+	}
+	err = global.Redis.WithContext(ctx).Set(cacheKey, val, 0).Err()
+	if err != nil {
+		return err
+	}
+	// 更新数据库
+	err = b.db.WithContext(ctx).Model(&borrow).Updates(borrow).Error
 	return err
 }
 
 func (b BorrowDao) Delete(ctx context.Context, id int) error {
-	err := b.db.WithContext(ctx).Delete(&model.Borrow{}, id).Error
+	// 删除缓存
+	cacheKey := fmt.Sprintf("borrow:%d", id)
+	err := global.Redis.WithContext(ctx).Del(cacheKey).Err()
+	if err != nil {
+		return err
+	}
+	// 删除数据库
+	err = b.db.WithContext(ctx).Delete(&model.Borrow{}, id).Error
 	return err
 }
 
