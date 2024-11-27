@@ -22,4 +22,5 @@ type UserRepo interface {
 	//PageQuery(ctx context.Context, dto request.UserPageQueryDTO) (*common.PageResult, error)
 	// UpdateStatus 更新状态
 	//UpdateStatus(ctx context.Context, employee model.Employee) error
+	GetNum(ctx context.Context) (int, error)
 }

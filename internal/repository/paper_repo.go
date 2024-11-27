@@ -20,4 +20,5 @@ type PaperRepo interface {
 	GetAll(ctx context.Context, pageID, pageSize int) ([]model.Paper, error)
 	//GetFilePath 获取文件路径
 	GetFilePath(ctx context.Context, id uint) (string, error)
+	GetNum(ctx context.Context) (int, error)
 }

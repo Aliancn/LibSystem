@@ -64,6 +64,15 @@ func (b BookDao) Delete(ctx context.Context, id int) error {
 	return nil
 }
 
+func (b BookDao) GetNum(ctx context.Context) (int, error) {
+	var count int64
+	err := b.db.Model(&model.Book{}).Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+	return int(count), nil
+}
+
 func NewBookDao(db *gorm.DB) repository.BookRepo {
 	return &BookDao{db: db}
 }

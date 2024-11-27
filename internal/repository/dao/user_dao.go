@@ -4,6 +4,7 @@ import (
 	"LibSystem/internal/model"
 	"LibSystem/internal/repository"
 	"context"
+
 	"gorm.io/gorm"
 )
 
@@ -44,6 +45,11 @@ func (u *UserDao) GetAll(ctx context.Context, pageID, pageSize int) ([]model.Use
 	err := u.db.WithContext(ctx).Offset((pageID - 1) * pageSize).Limit(pageSize).Find(&users).Error
 	// err := u.db.WithContext(ctx).Find(&users).Error
 	return users, err
+}
+func (u *UserDao) GetNum(ctx context.Context) (int, error) {
+	var count int64
+	err := u.db.WithContext(ctx).Model(&model.User{}).Count(&count).Error
+	return int(count), err
 }
 
 func NewUserDao(db *gorm.DB) repository.UserRepo {

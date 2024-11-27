@@ -57,6 +57,19 @@ func (b BorrowDao) GetByUserID(ctx context.Context, userID int) ([]model.Borrow,
 	}
 	return borrows, nil
 }
+
+func (b BorrowDao) GetBorrowInfo(ctx context.Context, day int) ([]model.Borrow, error) {
+	var borrows []model.Borrow
+	err := b.db.WithContext(ctx).Where("created_at > DATE_SUB(CURDATE(), INTERVAL ? DAY)", day).Find(&borrows).Error
+	if err != nil {
+		return nil, err
+	}
+	if len(borrows) == 0 {
+		return nil, nil
+	}
+	return borrows, nil
+}
+
 func NewBorrowDao(db *gorm.DB) repository.BorrowRepo {
 	return &BorrowDao{db: db}
 }

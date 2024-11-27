@@ -5,20 +5,25 @@ import (
 	"LibSystem/global"
 	"LibSystem/internal/api/request"
 	"LibSystem/internal/service"
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type PaperController struct {
-	service service.IPaperService
+	service     service.IPaperService
+	infoService service.IInfoService
 }
 
-func NewPaperController(service service.IPaperService) *PaperController {
-	return &PaperController{service: service}
+func NewPaperController(service service.IPaperService, infoService service.IInfoService) *PaperController {
+	return &PaperController{
+		service:     service,
+		infoService: infoService,
+	}
 }
 
 // GetPaperList 获取所有论文
@@ -26,8 +31,8 @@ func (pc *PaperController) GetPaperList(ctx *gin.Context) {
 	code := common.SUCCESS
 	page_id := ctx.Query("page_id")
 	page_size := ctx.Query("page_size")
-	pageID ,_ := strconv.Atoi(page_id)
-	pageSise ,_ := strconv.Atoi(page_size)
+	pageID, _ := strconv.Atoi(page_id)
+	pageSise, _ := strconv.Atoi(page_size)
 	resp, err := pc.service.GetPaperList(ctx, pageID, pageSise)
 	if err != nil {
 		code = common.ERROR
@@ -225,6 +230,7 @@ func (pc *PaperController) DownloadPaper(ctx *gin.Context) {
 	code := common.SUCCESS
 	id, _ := strconv.Atoi(ctx.Param("id"))
 	filePath, err := pc.service.GetPaperFilePath(ctx, id)
+	pc.infoService.AddInfo(ctx, id)
 	if err != nil {
 		code = common.ERROR
 		global.Log.Warn("PaperController DownloadPaper Error:", err.Error())

@@ -14,7 +14,10 @@ type PaperRouter struct {
 }
 
 func (pr *PaperRouter) InitApiRouter(router *gin.RouterGroup) {
-	paperCtl := controller.NewPaperController(service.NewPaperService(dao.NewPaperDao(global.DB)))
+	paperCtl := controller.NewPaperController(
+		service.NewPaperService(dao.NewPaperDao(global.DB)),
+		service.NewInfoService(dao.NewInfoDao(global.DB), dao.NewBookDao(global.DB), dao.NewUserDao(global.DB), dao.NewPaperDao(global.DB), dao.NewBorrowDao(global.DB)),
+	)
 	privatePaperRouter := router.Group("/papers")
 	privatePaperRouter.Use(middle.VerifyJWT())
 	{

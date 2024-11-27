@@ -28,6 +28,11 @@ func (p PaperDao) GetByPaperName(ctx context.Context, paperName string) ([]model
 	}
 	return paper, nil
 }
+func (p PaperDao) GetNum(ctx context.Context) (int, error) {
+	var count int64
+	err := p.db.WithContext(ctx).Model(&model.Paper{}).Count(&count).Error
+	return int(count), err
+}
 
 func (p PaperDao) GetById(ctx context.Context, id uint) (*model.Paper, error) {
 	var paper model.Paper

@@ -133,11 +133,18 @@ func (p PaperService) DeletePaper(ctx *gin.Context, id int) error {
 }
 
 func (p PaperService) GetPaperFilePath(ctx *gin.Context, id int) (string, error) {
-	filePath, err := p.repo.GetFilePath(ctx, uint(id))
+	// filePath, err := p.repo.GetFilePath(ctx, uint(id))
+	paper, err := p.repo.GetById(ctx, uint(id))
 	if err != nil {
 		return "", err
 	}
-	return filePath, nil
+	filepath := paper.FilePath
+	paper.DownloadTimes += 1
+	err = p.repo.Update(ctx, *paper)
+	if err != nil {
+		return "", err
+	}
+	return filepath, nil
 }
 
 func NewPaperService(repo repository.PaperRepo) IPaperService {
