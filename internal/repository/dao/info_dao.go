@@ -14,7 +14,7 @@ type InfoDao struct {
 
 func (i InfoDao) GetInfo(ctx context.Context, day int) ([]model.Info, error) {
 	var infos []model.Info
-	err := i.db.WithContext(ctx).Where("download_time > CURRENT_DATE - INTERVAL '? days'", day).Find(&infos).Error
+	err := i.db.WithContext(ctx).Where("download_time > CURRENT_DATE - INTERVAL ? DAY", day).Find(&infos).Error
 	if err != nil {
 		return nil, err
 	}

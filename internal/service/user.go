@@ -152,7 +152,7 @@ func (u UserService) RegisterAdmin(ctx *gin.Context, register request.UserRegist
 
 func (u UserService) AddUser(ctx *gin.Context, add request.UserDTO) error {
 	hashPassword := utils.MD5V(add.Password, "alia", 1)
-	global.Log.Debug("hashPassword:", hashPassword)
+	global.Log.Info("hashPassword:", hashPassword)
 	entity := model.User{
 		Username: add.Username,
 		Password: hashPassword,

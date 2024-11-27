@@ -66,7 +66,7 @@ func (is *InfoService) GetInfo(ctx *gin.Context) (response.InfoResponse, error) 
 		date_str := v.BorrowDate.Format("2006-01-02")
 		borrowNum[date_str] += 1
 	}
-	global.Log.Debug(downloadeTimes,bookNum,userNum,paperNum, borrowNum)
+	global.Log.Info(downloadeTimes, bookNum, userNum, paperNum, borrowNum)
 	return response.InfoResponse{
 		DownloadNum: downloadeTimes,
 		BookNum:     bookNum,

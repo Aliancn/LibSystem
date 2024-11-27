@@ -25,5 +25,5 @@ log:
 jwt:
   name: Authorization # 请求头中携带jwt的key
   secret: uOvKLmVfztaXGpNYd4Z0I1SiT7MweJhl # jwt加密密钥
-  expire: 86400 # jwt过期时间
+  expire: 86400  # jwt过期时间
 

@@ -60,7 +60,7 @@ func (b BorrowDao) GetByUserID(ctx context.Context, userID int) ([]model.Borrow,
 
 func (b BorrowDao) GetBorrowInfo(ctx context.Context, day int) ([]model.Borrow, error) {
 	var borrows []model.Borrow
-	err := b.db.WithContext(ctx).Where("borrow_date > CURRENT_DATE - INTERVAL '? days'", day).Find(&borrows).Error
+	err := b.db.WithContext(ctx).Where("borrow_date > CURRENT_DATE - INTERVAL ? DAY", day).Find(&borrows).Error
 	if err != nil {
 		return nil, err
 	}
