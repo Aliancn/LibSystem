@@ -98,3 +98,10 @@ CREATE TABLE borrow (
     user_id INT NOT NULL
 );
 
+-- 删除并重新创建 info 表
+DROP TABLE IF EXISTS info;
+CREATE TABLE info (
+    id SERIAL PRIMARY KEY,
+    paper_id INT NOT NULL,
+    download_time TIMESTAMP NOT NULL
+);
