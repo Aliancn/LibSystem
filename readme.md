@@ -26,92 +26,16 @@ This project is a Go application that uses Redis and PostgreSQL as its data stor
     ./script/run.sh stop
     ```
 
-## Directory Structure
-```
-.
-├── common
-│   ├── enum.go
-│   └── utils
-│       ├── encrypt.go
-│       ├── generice.go
-│       ├── jwt.go
-│       └── oss.go
-├── config
-│   ├── application-dev.yaml
-│   ├── application-release.yaml
-│   └── config.go
-├── data
-│   ├── postgres
-│   │   ├── config
-│   │   ├── data
-│   │   └── logs
-│   ├── redis
-│   │   ├── conf
-│   │   ├── data
-│   │   └── logs
-│   ├── running
-│   │   ├── config
-│   │   └── logs
-│   └── uploads
-├── docker-compose.yaml
-├── dockerfile
-├── global
-│   ├── global.go
-│   └── tx
-│       ├── gormTx.go
-│       └── transactionManager.go
-├── go.mod
-├── go.sum
-├── initialize
-│   ├── enter.go
-│   ├── gorm.go
-│   ├── redis.go
-│   └── router.go
-├── internal
-│   ├── api
-│   │   ├── controller
-│   │   ├── request
-│   │   └── response
-│   ├── model
-│   │   ├── Book.go
-│   │   ├── Borrow.go
-│   │   ├── Paper.go
-│   │   ├── User.go
-│   │   ├── file.go
-│   │   └── model.go
-│   ├── repository
-│   │   ├── book_repo.go
-│   │   ├── borrow_repo.go
-│   │   ├── dao
-│   │   ├── paper_repo.go
-│   │   └── user_repo.go
-│   ├── router
-│   │   ├── admin
-│   │   ├── common
-│   │   ├── router.go
-│   │   └── user
-│   └── service
-│       ├── book.go
-│       ├── borrow.go
-│       ├── paper.go
-│       └── user.go
-├── logger
-│   ├── log.go
-│   ├── slog.go
-│   └── systemLog.txt
-├── main.go
-├── middle
-│   └── jwt_middle.go
-├── readme.md
-├── script
-│   ├── db.sql
-│   ├── run.bash
-│   └── run.sh
-└── uploads
-    └── papers
-```
+##  Structure
+
+[excalidraw](https://excalidraw.com/#json=65P229fufj-26XVtYWjjL,DlrxR_RUbQZ7JBYO1RtnoA)
+
+![structure](https://telegraph-image-92x.pages.dev/file/c9c990648a030ffa0872b-aa6c0fca80323a95f6.png)
 
 
+## distribution version
+
+https://github.com/Aliancn/LibSystem/tree/distribute
 
 ## License
 This project is licensed under the MIT License.
