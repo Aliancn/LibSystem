@@ -8,6 +8,10 @@ This project is a Go application that uses Redis and PostgreSQL as its data stor
 - Docker
 - Docker Compose
 
+## Api documentation
+
+https://apifox.com/apidoc/shared-aa1e7fad-5f1b-4304-918e-a60cba3b4ab5
+
 ## Setup
 
 1. Clone the repository:
