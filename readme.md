@@ -34,7 +34,7 @@ https://apifox.com/apidoc/shared-aa1e7fad-5f1b-4304-918e-a60cba3b4ab5
 
 [excalidraw](https://excalidraw.com/#json=65P229fufj-26XVtYWjjL,DlrxR_RUbQZ7JBYO1RtnoA)
 
-![structure](https://telegraph-image-92x.pages.dev/file/c9c990648a030ffa0872b-aa6c0fca80323a95f6.png)
+![structure](./项目架构.png)
 
 
 ## distribution version
